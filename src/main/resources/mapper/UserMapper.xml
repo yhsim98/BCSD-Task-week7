@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="repository.UserMapper">
+
+
+    <select id="getUserById" resultType="domain.User" parameterType="Long">
+        SELECT * FROM users where id=#{id}
+    </select>
+
+    <select id="getUsers" resultType="domain.User">
+        SELECT * FROM users
+    </select>
+
+    <delete id="deleteById" parameterType="Long">
+        DELETE FROM users where id=#{id}
+    </delete>
+
+    <insert id="insertUser" parameterType="domain.User">
+        INSERT INTO users(id, name, email) VALUES(#{id}, #{name}, #{email})
+    </insert>
+
+    <update id="updateUser" parameterType="domain.User">
+        UPDATE users SET name=#{name}, email=#{email} where id=#{id}
+    </update>
+
+</mapper>
