@@ -12,5 +12,19 @@
 
     <mvc:annotation-driven></mvc:annotation-driven>
     <context:component-scan base-package="controller"></context:component-scan>
+    <context:component-scan base-package="service"/>
+    <context:component-scan base-package="serviceImpl"/>
+    <context:component-scan base-package="repository"/>
+    <context:component-scan base-package="util"/>
+    <context:component-scan base-package="mapper"/>
+
+
+    <!-- Interceptors -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**" />
+            <bean class="interceptor.AuthInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
 
 </beans>

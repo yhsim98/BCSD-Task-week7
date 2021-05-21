@@ -23,12 +23,12 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         if (auth == null) { // auth annotation 이 없다면
             return true;
         } else { // auth annotation 이 있다면
-             if ( jwtUtil.isValid(request.getHeader("Authorization"))){
-                 return true;
-             }
-             else{
-                 throw new Exception("non valid");
-             }
+            if ( jwtUtil.isValid(request.getHeader("Authorization"))){
+                return true;
+            }
+            else{
+                throw new Exception("non valid");
+            }
         }
     }
 }
