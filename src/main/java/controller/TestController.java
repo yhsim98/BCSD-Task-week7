@@ -32,7 +32,7 @@ public class TestController {
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity join(@RequestBody User user){
         if(userService.insertUser(user)) return new ResponseEntity("success", HttpStatus.OK);
-        else return new ResponseEntity("fail", HttpStatus.OK);
+        else return new ResponseEntity("that email already being used", HttpStatus.OK);
     }
 
     // 토큰이 있어야만 사용가능한 조회 api ( 로그인 )

@@ -24,7 +24,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean insertUser(User user){
-        return userRepository.insertUser(user);
+        if(userRepository.getUserByEmail(user.getEmail()) == null) {
+            userRepository.insertUser(user);
+            return true;
+        }
+        return false;
     }
 
     @Override

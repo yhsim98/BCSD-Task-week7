@@ -13,27 +13,19 @@ public class UserRepositoryMybatis implements UserRepository{
 
     @Override
     public User getUserByEmail(String email) {
-        User user = userMapper.getUserByEmail(email);
-        return user;
+        return userMapper.getUserByEmail(email);
     }
 
     @Override
     public String test(){ return userMapper.test(); }
 
     @Override
-    public boolean insertUser(User user) {
-        if(userMapper.getUserByEmail(user.getEmail()) == null) {
-            userMapper.insertUser(user);
-            return true;
-        }
-        else return false;
+    public void insertUser(User user) {
+        userMapper.insertUser(user);
     }
 
     @Override
     public User getUserById(Long id) {
-        User user = null;
-        user = userMapper.getUserById(id);
-        if(user == null) System.out.println("asd");
-        return user;
+        return userMapper.getUserById(id);
     }
 }
