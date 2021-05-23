@@ -1,14 +1,20 @@
 package controller;
 
 import annotation.Auth;
+import domain.AuthenticationResponse;
 import domain.User;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import service.UserService;
 import util.JwtUtil;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping(value="/user")
@@ -18,6 +24,8 @@ public class TestController {
     private JwtUtil jwtUtil;
     @Autowired
     private UserService userService;
+    @Value("${json.web.token.secret.key}")
+    String secret;
 
     // 토큰이 없어도 사용가능한 회원가입 api ( 비로그인 )
     @ResponseBody
@@ -31,20 +39,24 @@ public class TestController {
     @Auth
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity userInquiry(@RequestParam("Authorization") String auth){
-        return new ResponseEntity("login api", HttpStatus.OK);
+    public ResponseEntity userInquiry(HttpServletRequest request){
+        String token = request.getHeader("Authorization");
+        token = token.substring(7);
+        Claims claims = Jwts.parser().setSigningKey(secret.getBytes()).parseClaimsJws(token).getBody();
+        return new ResponseEntity(userService.getUserInfo(Long.parseLong(String.valueOf(claims.get("id")))), HttpStatus.OK);
     }
 
     // 토큰을 발급하는 로그인 api
     @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public ResponseEntity login(@RequestBody User user) {
+    public ResponseEntity login(@RequestBody User user) throws Exception {
+        if(user == null) throw new Exception("입력 오류");
+
         User tmp = null;
 
-        if (user != null)
-            tmp = userService.userLogin(user);
+        tmp = userService.userLogin(user);
 
         if (tmp == null) return new ResponseEntity("login fail", HttpStatus.OK);
-        else return new ResponseEntity(jwtUtil.genJsonWebToken(Long.valueOf(tmp.getId())), HttpStatus.OK);
+        else return new ResponseEntity(new AuthenticationResponse(jwtUtil.genJsonWebToken(tmp.getId())), HttpStatus.OK);
     }
 }

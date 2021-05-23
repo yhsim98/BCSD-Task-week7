@@ -28,4 +28,12 @@ public class UserRepositoryMybatis implements UserRepository{
         }
         else return false;
     }
+
+    @Override
+    public User getUserById(Long id) {
+        User user = null;
+        user = userMapper.getUserById(id);
+        if(user == null) System.out.println("asd");
+        return user;
+    }
 }

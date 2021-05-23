@@ -26,4 +26,9 @@ public class UserServiceImpl implements UserService {
     public boolean insertUser(User user){
         return userRepository.insertUser(user);
     }
+
+    @Override
+    public User getUserInfo(Long id) {
+        return userRepository.getUserById(id);
+    }
 }
