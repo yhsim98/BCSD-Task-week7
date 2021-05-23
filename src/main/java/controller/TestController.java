@@ -11,6 +11,7 @@ import service.UserService;
 import util.JwtUtil;
 
 @Controller
+@RequestMapping(value="/user")
 public class TestController {
 
     @Autowired
@@ -18,37 +19,32 @@ public class TestController {
     @Autowired
     private UserService userService;
 
-    // 토큰이 없어도 사용가능한 api ( 비로그인 )
+    // 토큰이 없어도 사용가능한 회원가입 api ( 비로그인 )
     @ResponseBody
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public ResponseEntity test(){
-        return new ResponseEntity("non login api", HttpStatus.OK);
+    @RequestMapping(value = "", method = RequestMethod.POST)
+    public ResponseEntity join(@RequestBody User user){
+        if(userService.insertUser(user)) return new ResponseEntity("success", HttpStatus.OK);
+        else return new ResponseEntity("fail", HttpStatus.OK);
     }
 
-    // 토큰이 있어야만 사용가능한 api ( 로그인 )
+    // 토큰이 있어야만 사용가능한 조회 api ( 로그인 )
     @Auth
     @ResponseBody
-    @RequestMapping(value = "/test2", method = RequestMethod.GET)
-    public ResponseEntity test2(){
+    @RequestMapping(value = "", method = RequestMethod.GET)
+    public ResponseEntity userInquiry(@RequestParam("Authorization") String auth){
         return new ResponseEntity("login api", HttpStatus.OK);
     }
 
-    // 토큰을 발급하는 api
+    // 토큰을 발급하는 로그인 api
     @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public ResponseEntity test3(@RequestBody User user){
+    public ResponseEntity login(@RequestBody User user) {
         User tmp = null;
 
-        if(user != null)
+        if (user != null)
             tmp = userService.userLogin(user);
 
-        if(tmp == null) return new ResponseEntity("login fail", HttpStatus.OK);
+        if (tmp == null) return new ResponseEntity("login fail", HttpStatus.OK);
         else return new ResponseEntity(jwtUtil.genJsonWebToken(Long.valueOf(tmp.getId())), HttpStatus.OK);
-    }
-    //
-    @ResponseBody
-    @RequestMapping(value="/test3", method = RequestMethod.GET)
-    public String test3(){
-        return userService.test();
     }
 }

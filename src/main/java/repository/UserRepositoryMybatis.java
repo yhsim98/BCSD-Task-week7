@@ -19,4 +19,13 @@ public class UserRepositoryMybatis implements UserRepository{
 
     @Override
     public String test(){ return userMapper.test(); }
+
+    @Override
+    public boolean insertUser(User user) {
+        if(userMapper.getUserByEmail(user.getEmail()) == null) {
+            userMapper.insertUser(user);
+            return true;
+        }
+        else return false;
+    }
 }

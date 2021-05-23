@@ -21,4 +21,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String test() { return userRepository.test(); }
+
+    @Override
+    public boolean insertUser(User user){
+        return userRepository.insertUser(user);
+    }
 }
