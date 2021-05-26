@@ -39,10 +39,8 @@ public class TestController {
     @Auth
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity userInquiry(HttpServletRequest request){
-        String token = request.getHeader("Authorization");
-        token = token.substring(7);
-        Claims claims = Jwts.parser().setSigningKey(secret.getBytes()).parseClaimsJws(token).getBody();
+    public ResponseEntity userInquiry(@RequestHeader(value="Authorization") String token){
+        Claims claims = Jwts.parser().setSigningKey(secret.getBytes()).parseClaimsJws(token.substring(7)).getBody();
         return new ResponseEntity(userService.getUserInfo(Long.parseLong(String.valueOf(claims.get("id")))), HttpStatus.OK);
     }
 
@@ -53,7 +51,6 @@ public class TestController {
         if(user == null) throw new Exception("입력 오류");
 
         User tmp = null;
-
         tmp = userService.userLogin(user);
 
         if (tmp == null) return new ResponseEntity("login fail", HttpStatus.OK);
