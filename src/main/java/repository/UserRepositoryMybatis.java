@@ -1,15 +1,18 @@
 package repository;
 
 import domain.User;
-import mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-@Repository
+@Repository("myBatis")
 public class UserRepositoryMybatis implements UserRepository{
 
+    private final UserMapper userMapper;
+
     @Autowired
-    private UserMapper userMapper;
+    public UserRepositoryMybatis(UserMapper userMapper){
+        this.userMapper = userMapper;
+    }
 
     @Override
     public User getUserByEmail(String email) {

@@ -17,7 +17,10 @@
     <context:component-scan base-package="repository"/>
     <context:component-scan base-package="util"/>
     <context:component-scan base-package="mapper"/>
+    <context:component-scan base-package="swagger"/>
 
+    <mvc:resources location="classpath:/META-INF/resources/" mapping="swagger-ui.html"/>
+    <mvc:resources location="classpath:/META-INF/resources/webjars/" mapping="/webjars/**"/>
 
     <!-- Interceptors -->
     <mvc:interceptors>

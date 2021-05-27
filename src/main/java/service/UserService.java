@@ -3,8 +3,8 @@ package service;
 import domain.User;
 
 public interface UserService {
-    User userLogin(User user);
+    String userLogin(User user) throws Exception;
     String test();
-    boolean insertUser(User user);
-    User getUserInfo(Long id);
+    void insertUser(User user) throws Exception;
+    User getUserInfo(String token) throws Exception;
 }

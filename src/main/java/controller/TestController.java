@@ -15,6 +15,7 @@ import service.UserService;
 import util.JwtUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 
 @Controller
 @RequestMapping(value="/user")
@@ -24,15 +25,18 @@ public class TestController {
     private JwtUtil jwtUtil;
     @Autowired
     private UserService userService;
-    @Value("${json.web.token.secret.key}")
-    String secret;
+
 
     // 토큰이 없어도 사용가능한 회원가입 api ( 비로그인 )
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity join(@RequestBody User user){
-        if(userService.insertUser(user)) return new ResponseEntity("success", HttpStatus.OK);
-        else return new ResponseEntity("that email already being used", HttpStatus.OK);
+        try{
+            userService.insertUser(user);
+        } catch(Exception e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity("success", HttpStatus.CREATED);
     }
 
     // 토큰이 있어야만 사용가능한 조회 api ( 로그인 )
@@ -40,20 +44,25 @@ public class TestController {
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity userInquiry(@RequestHeader(value="Authorization") String token){
-        Claims claims = Jwts.parser().setSigningKey(secret.getBytes()).parseClaimsJws(token.substring(7)).getBody();
-        return new ResponseEntity(userService.getUserInfo(Long.parseLong(String.valueOf(claims.get("id")))), HttpStatus.OK);
+        User user;
+        try{
+            user = userService.getUserInfo(token);
+        } catch(Exception e){
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity(user, HttpStatus.OK);
     }
 
     // 토큰을 발급하는 로그인 api
     @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public ResponseEntity login(@RequestBody User user) throws Exception {
-        if(user == null) throw new Exception("입력 오류");
-
-        User tmp = null;
-        tmp = userService.userLogin(user);
-
-        if (tmp == null) return new ResponseEntity("login fail", HttpStatus.OK);
-        else return new ResponseEntity(new AuthenticationResponse(jwtUtil.genJsonWebToken(tmp.getId())), HttpStatus.OK);
+    public ResponseEntity login(@RequestBody User user) {
+        String token;
+        try {
+            token = userService.userLogin(user);
+        } catch(Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
+        return new ResponseEntity(new AuthenticationResponse(token), HttpStatus.OK);
     }
 }
