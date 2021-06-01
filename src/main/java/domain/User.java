@@ -3,7 +3,7 @@ package domain;
 public class User {
     private Long id;
     private String email;
-    private String passWord;
+    private String password;
 
     public Long getId() {
         return id;
@@ -21,11 +21,11 @@ public class User {
         this.email = email;
     }
 
-    public String getPassWord() {
-        return passWord;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPassWord(String passWord) {
-        this.passWord = passWord;
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

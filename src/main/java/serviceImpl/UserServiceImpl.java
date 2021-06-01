@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
             throw new Exception("account not exist");
         }
 
-        if(!user.getPassWord().equals(selectUser.getPassWord())){
+        if(!user.getPassword().equals(selectUser.getPassword())){
             throw new Exception("password not match");
         }
 
