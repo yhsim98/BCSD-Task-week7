@@ -33,7 +33,7 @@ public class TestController {
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.POST)
     public ResponseEntity register(@RequestBody User user){
-        try{
+        try{ //TODO 예외 자동으로 처리되게 만들기
             userService.insertUser(user);
         } catch(Exception e){
             return new ResponseEntity(e.getMessage(), HttpStatus.CONFLICT);
@@ -48,7 +48,7 @@ public class TestController {
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity userInquiry(@RequestHeader(value="Authorization") String token){
         User user;
-        try{
+        try{ //TODO 예외 자동으로 처리되게 만들기
             user = userService.getUserInfo(token);
         } catch(Exception e){
             return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -62,7 +62,7 @@ public class TestController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity login(@RequestBody User user) {
         String token;
-        try {
+        try { //TODO 예외 자동으로 처리되게 만들기
             token = userService.userLogin(user);
         } catch(Exception e) {
             return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
