@@ -1,6 +1,9 @@
 package serviceImpl;
 
 import domain.User;
+import exception.ConflictException;
+import exception.NotFoundException;
+import exception.UnauthorizedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import jdk.nashorn.internal.runtime.ECMAException;
@@ -31,11 +34,11 @@ public class UserServiceImpl implements UserService {
         User selectUser = userRepository.getUserByEmail(user.getEmail());
 
         if(selectUser == null) {
-            throw new Exception("account not exist");
+            throw new NotFoundException("account not exist");
         }
 
         if(!user.getPassword().equals(selectUser.getPassword())){
-            throw new Exception("password not match");
+            throw new UnauthorizedException("password not match");
         }
 
         return jwtUtil.genJsonWebToken(selectUser.getId());
@@ -50,7 +53,7 @@ public class UserServiceImpl implements UserService {
         User selectUser = userRepository.getUserByEmail(user.getEmail());
 
         if(selectUser != null) {
-            throw new Exception("email already being used");
+            throw new ConflictException("email already being used");
         }
 
         userRepository.insertUser(user);
@@ -63,7 +66,7 @@ public class UserServiceImpl implements UserService {
         User selectUser = userRepository.getUserById(Long.parseLong(String.valueOf(claims.get("id"))));
 
         if(selectUser == null){
-            throw new Exception("account not exist");
+            throw new NotFoundException("account not exist");
         }
 
         return selectUser;

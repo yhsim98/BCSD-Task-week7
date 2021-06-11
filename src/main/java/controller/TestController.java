@@ -23,8 +23,6 @@ import java.util.HashMap;
 public class TestController {
 
     @Autowired
-    private JwtUtil jwtUtil;
-    @Autowired
     private UserService userService;
 
 
@@ -32,12 +30,8 @@ public class TestController {
     @ApiOperation(value="사용자 생성", notes = "신규 사용자 생성")
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public ResponseEntity register(@RequestBody User user){
-        try{ //TODO 예외 자동으로 처리되게 만들기
-            userService.insertUser(user);
-        } catch(Exception e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.CONFLICT);
-        }
+    public ResponseEntity register(@RequestBody User user) throws Exception{
+        userService.insertUser(user);
         return new ResponseEntity("success", HttpStatus.CREATED);
     }
 
@@ -46,27 +40,15 @@ public class TestController {
     @Auth
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity userInquiry(@RequestHeader(value="Authorization") String token){
-        User user;
-        try{ //TODO 예외 자동으로 처리되게 만들기
-            user = userService.getUserInfo(token);
-        } catch(Exception e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity(user, HttpStatus.OK);
+    public ResponseEntity userInquiry(@RequestHeader(value="Authorization") String token) throws Exception{
+        return new ResponseEntity(userService.getUserInfo(token), HttpStatus.OK);
     }
 
     // 토큰을 발급하는 로그인 api
     @ApiOperation(value="사용자 로그인", notes="사용자 정보를 받고 토큰을 반환")
     @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity login(@RequestBody User user) {
-        String token;
-        try { //TODO 예외 자동으로 처리되게 만들기
-            token = userService.userLogin(user);
-        } catch(Exception e) {
-            return new ResponseEntity(e.getMessage(), HttpStatus.UNAUTHORIZED);
-        }
-        return new ResponseEntity(new AuthenticationResponse(token), HttpStatus.OK);
+    public ResponseEntity login(@RequestBody User user) throws Exception{
+        return new ResponseEntity(new AuthenticationResponse(userService.userLogin(user)), HttpStatus.OK);
     }
 }
