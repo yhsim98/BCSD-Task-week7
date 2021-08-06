@@ -40,8 +40,8 @@ public class TestController {
     @Auth
     @ResponseBody
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public ResponseEntity userInquiry(@RequestHeader(value="Authorization") String token) throws Exception{
-        return new ResponseEntity(userService.getUserInfo(token), HttpStatus.OK);
+    public ResponseEntity userInquiry() throws Exception{
+        return new ResponseEntity(userService.getUserInfo(), HttpStatus.OK);
     }
 
     // 토큰을 발급하는 로그인 api

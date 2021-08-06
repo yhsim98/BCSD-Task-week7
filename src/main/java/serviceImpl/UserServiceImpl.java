@@ -11,9 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import repository.UserRepository;
 import service.UserService;
 import util.JwtUtil;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -60,7 +64,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserInfo(String token) throws Exception {
+    public User getUserInfo() throws Exception {
+
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        String token = request.getHeader("Authorization");
 
         Claims claims = Jwts.parser().setSigningKey(secret.getBytes()).parseClaimsJws(token.substring(7)).getBody();
         User selectUser = userRepository.getUserById(Long.parseLong(String.valueOf(claims.get("id"))));
