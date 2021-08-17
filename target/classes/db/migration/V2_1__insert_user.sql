@@ -1,0 +1,1 @@
+insert into user(email, password) values ('123', '123');

@@ -6,6 +6,7 @@ import domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.swagger.annotations.ApiOperation;
+import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,8 @@ public class TestController {
 
     @Autowired
     private UserService userService;
-
+    @Autowired
+    private Flyway flyway;
 
     // 토큰이 없어도 사용가능한 회원가입 api ( 비로그인 )
     @ApiOperation(value="사용자 생성", notes = "신규 사용자 생성")

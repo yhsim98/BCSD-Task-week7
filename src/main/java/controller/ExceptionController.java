@@ -18,7 +18,7 @@ public class ExceptionController {
 
     @ExceptionHandler({NotFoundException.class})
     public ResponseEntity conflictException(final NotFoundException e){
-        return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({UnauthorizedException.class})
